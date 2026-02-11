@@ -1,4 +1,4 @@
-// Copyright (c) 2023 thorstenrie
+// Copyright (c) 2023-2026 thorsphere
 // All Rights Reserved. Use is governed with GNU Affero General Public License v3.0
 // that can be found in the LICENSE file.
 package tslog
@@ -29,14 +29,41 @@ type logwrap struct {
 	L logmsg `json:"log"` // JSON root element
 }
 
+func (l *Logger) closeOut() error {
+	// Do not close Stdout or Stderr
+	if l.out == os.Stdout || l.out == os.Stderr {
+		// Do not close Stdout or Stderr
+	} else if closer, ok := l.out.(io.Closer); ok { // If l.out is a file, close it and return an error, if any
+		// Close the file and return an error, if any
+		if err := closer.Close(); err != nil {
+			// Return an error for closing the file
+			return tserr.Op(&tserr.OpArgs{Op: "close log file", Fn: string(l.outFn), Err: err})
+		}
+	}
+	l.out = nil
+	l.outFn = ""
+	// Return nil
+	return nil
+}
+
 // setStdout sets logging to Stdout.
 func (l *Logger) setStdout() {
+	// Set logging output to Stdout
 	l.logger.SetOutput(os.Stdout)
+	// Set l.out to Stdout
+	l.out = os.Stdout
+	// Set logging output filename to Stdout
+	l.outFn = StdoutLogger
 }
 
 // noLogger sets logging to discard logging.
 func (l *Logger) noLogger() {
+	// Set logging output to discard
 	l.logger.SetOutput(io.Discard)
+	// Set l.out to discard
+	l.out = io.Discard
+	// Set logging output filename to discard
+	l.outFn = DiscardLogger
 }
 
 // trylog logs message msg, if lvl is equal to or higher than the
@@ -82,6 +109,7 @@ func jsonFormat(lvl int, msg string) ([]byte, error) {
 // level returns the string representation of lvl. It returns "error" and an error,
 // if lvl is non existent.
 func level(lvl int) (string, error) {
+	// Return the string representation for log level lvl or an error for invalid log levels
 	switch lvl {
 	case TraceLevel:
 		return "trace", nil

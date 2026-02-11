@@ -1,34 +1,34 @@
 # tslog
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/thorstenrie/tslog)](https://goreportcard.com/report/github.com/thorstenrie/tslog)
-[![CodeFactor](https://www.codefactor.io/repository/github/thorstenrie/tslog/badge)](https://www.codefactor.io/repository/github/thorstenrie/tslog)
-![OSS Lifecycle](https://img.shields.io/osslifecycle/thorstenrie/tslog)
+[![Go Report Card](https://goreportcard.com/badge/github.com/thorsphere/tslog)](https://goreportcard.com/report/github.com/thorsphere/tslog)
+[![CodeFactor](https://www.codefactor.io/repository/github/thorsphere/tslog/badge)](https://www.codefactor.io/repository/github/thorsphere/tslog)
+![OSS Lifecycle](https://img.shields.io/osslifecycle/thorsphere/tslog)
 
-[![PkgGoDev](https://pkg.go.dev/badge/mod/github.com/thorstenrie/tslog)](https://pkg.go.dev/mod/github.com/thorstenrie/tslog)
-![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/thorstenrie/tslog)
-![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/thorstenrie/tslog)
+[![PkgGoDev](https://pkg.go.dev/badge/mod/github.com/thorsphere/tslog)](https://pkg.go.dev/mod/github.com/thorsphere/tslog)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/thorsphere/tslog)
+![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/thorsphere/tslog)
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/thorstenrie/tslog)
-![GitHub last commit](https://img.shields.io/github/last-commit/thorstenrie/tslog)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/thorstenrie/tslog)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/thorstenrie/tslog)
-![GitHub Top Language](https://img.shields.io/github/languages/top/thorstenrie/tslog)
-![GitHub](https://img.shields.io/github/license/thorstenrie/tslog)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/thorsphere/tslog)
+![GitHub last commit](https://img.shields.io/github/last-commit/thorsphere/tslog)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/thorsphere/tslog)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/thorsphere/tslog)
+![GitHub Top Language](https://img.shields.io/github/languages/top/thorsphere/tslog)
+![GitHub](https://img.shields.io/github/license/thorsphere/tslog)
 
 [Go](https://go.dev/) package for logging that tries to keep it simple ([KISS principle](https://en.wikipedia.org/wiki/KISS_principle)).
 
 - **Simple**: Pre-defined global logger to Stdout without configuration and log levels Trace, Debug, Info, Warn, Error and Fatal.
 - **Easy to parse**: The log messages are formatted in JSON format.
 - **Flexible**: Logging can be configured to stdout (default), to a temp file, a specifically defined file or even discarded.
-- **Tested**: Unit tests with high [code coverage](https://gocover.io/github.com/thorstenrie/tslog)
-- **Dependencies**: Only depends on [Go Standard Library](https://pkg.go.dev/std), [tsfio](https://gocover.io/github.com/thorstenrie/tsfio) and [tserr](https://gocover.io/github.com/thorstenrie/tserr)
+- **Tested**: Unit tests with high [code coverage](https://gocover.io/github.com/thorsphere/tslog)
+- **Dependencies**: Only depends on [Go Standard Library](https://pkg.go.dev/std), [tsfio](https://gocover.io/github.com/thorsphere/tsfio) and [tserr](https://gocover.io/github.com/thorsphere/tserr)
 
 ## Usage
 
 In the Go app, the package is imported with
 
 ```
-import "github.com/thorstenrie/tslog"
+import "github.com/thorsphere/tslog"
 ```
 
 A tslog logger is based on type [Logger](https://pkg.go.dev/log#Logger) defined in Go Standard package [log](https://pkg.go.dev/log).
@@ -47,7 +47,7 @@ func Fatal(err error) error
 ```
 
 Log levels `Error` and `Fatal` receive an error for logging.
-An error can be retrieved with package [tserr](https://gocover.io/github.com/thorstenrie/tserr), func [New](https://pkg.go.dev/errors#New) or or with func [Errorf](https://pkg.go.dev/fmr#Errorf)
+An error can be retrieved with package [tserr](https://gocover.io/github.com/thorsphere/tserr), func [New](https://pkg.go.dev/errors#New) or or with func [Errorf](https://pkg.go.dev/fmr#Errorf)
 
 The default logger can be retrieved with
 
@@ -126,7 +126,7 @@ package main
 
 import (
     "errors"
-    "github.com/thorstenrie/tslog"
+    "github.com/thorsphere/tslog"
 )
 
 func main() {
@@ -155,10 +155,10 @@ Output
 
 ## Links
 
-[Godoc](https://pkg.go.dev/github.com/thorstenrie/tslog)
+[Godoc](https://pkg.go.dev/github.com/thorsphere/tslog)
 
-[Gocover.io](https://gocover.io/github.com/thorstenrie/tslog)
+[Gocover.io](https://gocover.io/github.com/thorsphere/tslog)
 
-[Go Report Card](https://goreportcard.com/report/github.com/thorstenrie/tslog)
+[Go Report Card](https://goreportcard.com/report/github.com/thorsphere/tslog)
 
-[Open Source Insights](https://deps.dev/go/github.com%2Fthorstenrie%2Ftslog)
+[Open Source Insights](https://deps.dev/go/github.com%2Fthorsphere%2Ftslog)

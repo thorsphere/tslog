@@ -1,4 +1,4 @@
-// Copyright (c) 2023 thorstenrie
+// Copyright (c) 2023-2026 thorsphere
 // All Rights Reserved. Use is governed with GNU Affero General Public License v3.0
 // that can be found in the LICENSE file.
 package tslog
@@ -6,6 +6,7 @@ package tslog
 // Import standard library packages, tserr and tsfio.
 import (
 	"fmt" // fmt
+	"io"  // io
 	"log" // log
 	"os"  // os
 
@@ -16,15 +17,22 @@ import (
 // Logger contains a log.logger for logging and the minimum level for logging.
 // The minimum level for logging is set with SetLevel.
 type Logger struct {
-	minLvl int         // minimum level for logging
-	logger *log.Logger // for logging
+	minLvl int            // minimum level for logging
+	logger *log.Logger    // for logging
+	out    io.Writer      // file for logging
+	outFn  tsfio.Filename // filename for logging
 }
 
 // New creates a new logger with default minimum level Info for logging. To alter
 // the minimum level for logging use SetLevel. Logging is set to Stdout. To
 // change logging output use SetOutput.
 func New() *Logger {
-	return &Logger{minLvl: defaultMinLvl, logger: log.New(os.Stdout, "", 0)}
+	return &Logger{
+		minLvl: defaultMinLvl,
+		logger: log.New(os.Stdout, "", 0),
+		out:    os.Stdout,
+		outFn:  StdoutLogger,
+	}
 }
 
 // SetLevel sets the logging level. All levels equal or higher than the set level
@@ -64,6 +72,14 @@ func (l *Logger) SetLevel(level int) error {
 // 'tmp' for logging to tslog_* in the temporary directory
 // If SetOuput returns an error, logging is set to Stdout
 func (l *Logger) SetOutput(fn tsfio.Filename) error {
+
+	if err := l.closeOut(); err != nil {
+		// If closeOut returns an error, set logging output to Stdout and return an error
+		l.setStdout()
+		// Return error
+		return tserr.Op(&tserr.OpArgs{Op: "close log output", Fn: string(l.outFn), Err: err})
+	}
+
 	// Handle special loggers
 	switch fn {
 	case DiscardLogger:
@@ -90,6 +106,10 @@ func (l *Logger) SetOutput(fn tsfio.Filename) error {
 		}
 		// Activate logging to f
 		l.logger.SetOutput(f)
+		// Set l.out to f
+		l.out = f
+		// Set logging output filename to TmpLogger
+		l.outFn = TmpLogger
 		// Return nil
 		return nil
 	}
@@ -114,7 +134,10 @@ func (l *Logger) SetOutput(fn tsfio.Filename) error {
 
 	// Set Ouptut to file f
 	l.logger.SetOutput(f)
-
+	// Set l.out to f
+	l.out = f
+	// Set logging output filename to fn
+	l.outFn = fn
 	// Return nil
 	return nil
 }

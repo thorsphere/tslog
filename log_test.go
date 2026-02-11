@@ -1,4 +1,4 @@
-// Copyright (c) 2023 thorstenrie
+// Copyright (c) 2023-2026 thorsphere
 // All Rights Reserved. Use is governed with GNU Affero General Public License v3.0
 // that can be found in the LICENSE file.
 package tslog
@@ -128,6 +128,8 @@ func TestLogger(t *testing.T) {
 // It records an error if a performed operation reports an error or if the text in the
 // temporary output file does not match the expected result based on the testcases.
 func TestLog(t *testing.T) {
+	// Set output of the default logger to Stdout for testing purpose
+	SetOutput(StdoutLogger)
 	// Create the temporary file fn
 	fn := tmp(t)
 	// Set output to temporary file fn
