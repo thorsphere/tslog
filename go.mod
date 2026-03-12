@@ -1,4 +1,4 @@
-module github.com/thorstenrie/tslog
+module github.com/thorsphere/tslog
 
 go 1.26
 
