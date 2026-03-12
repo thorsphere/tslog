@@ -21,7 +21,7 @@ import (
 	"github.com/thorstenrie/tsfio" // tsfio
 )
 
-// Level representes the severity of a logging event.
+// Level represents the severity of a logging event.
 // The levels are Trace, Debug, Info, Warn, Error and Fatal.
 type (
 	Level slog.Level
