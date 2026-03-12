@@ -20,8 +20,8 @@
 - **Simple**: Pre-defined global logger to Stdout without configuration and log levels Trace, Debug, Info, Warn, Error and Fatal.
 - **Easy to parse**: The log messages are formatted in JSON format.
 - **Flexible**: Logging can be configured to stdout (default), to a temp file, a specifically defined file or even discarded.
-- **Tested**: Unit tests with high [code coverage](https://gocover.io/github.com/thorsphere/tslog)
-- **Dependencies**: Only depends on [Go Standard Library](https://pkg.go.dev/std), [tsfio](https://gocover.io/github.com/thorsphere/tsfio) and [tserr](https://gocover.io/github.com/thorsphere/tserr)
+- **Tested**: Unit tests with high code coverage
+- **Dependencies**: Only depends on [Go Standard Library](https://pkg.go.dev/std), [tsfio](https://pkg.go.dev/github.com/thorsphere/tsfio) and [tserr](https://pkg.go.dev/github.com/thorsphere/tserr)
 
 ## Usage
 
@@ -31,7 +31,7 @@ In the Go app, the package is imported with
 import "github.com/thorsphere/tslog"
 ```
 
-A tslog logger is based on type [Logger](https://pkg.go.dev/log#Logger) defined in Go Standard package [log](https://pkg.go.dev/log).
+A tslog logger is based on type [Logger](https://pkg.go.dev/slog#Logger) defined in Go Standard package [slog](https://pkg.go.dev/slog).
 
 ## Default logger
 
@@ -47,7 +47,7 @@ func Fatal(err error) error
 ```
 
 Log levels `Error` and `Fatal` receive an error for logging.
-An error can be retrieved with package [tserr](https://gocover.io/github.com/thorsphere/tserr), func [New](https://pkg.go.dev/errors#New) or or with func [Errorf](https://pkg.go.dev/fmr#Errorf)
+An error can be retrieved with package [tserr](https://pkg.go.dev/github.com/thorsphere/tserr), func [New](https://pkg.go.dev/errors#New) or or with func [Errorf](https://pkg.go.dev/fmr#Errorf)
 
 The default logger can be retrieved with
 
@@ -85,38 +85,38 @@ A logger can be configured to log from a specific level and any higher level. Th
 
 ```
 // Trace: log the execution of code of the app
-TraceLevel int = 1
+traceLevel Level = Level(slog.LevelDebug - 4)
 
 // Debug: log detailed events for debugging of the app
-DebugLevel int = 2
+debugLevel Level = Level(slog.LevelDebug)
 
 // Info: log an event under normal conditions of the app
-InfoLevel int = 3
+infoLevel Level = Level(slog.LevelInfo)
 
 // Warn: log an unintended event, which is tried to be recovered and potentially
 // impacting execution of the app
-WarnLevel int = 4
+warnLevel Level = Level(slog.LevelWarn)
 
 // Error: log an unexpected event with at least one function of the app being not operable
-ErrorLevel int = 5
+errorLevel Level = Level(slog.LevelError)
 
 // Fatal: log an unexpected critical event forcing a shutdown of the app
-FatalLevel int = 6
+fatalLevel Level = Level(slog.LevelError + 4)
 ```
 
 The log level is set with
 
 ```
-func (l *Logger) SetLevel(level int) error
+func (l *Logger) SetLevel(level Level) error
 ```
 
 ## Output
 
-The log messages are formatted in the JSON format. The root element is named `log`. Each log message has the field "level" which is a string respresentation of the log level, the field "message" and timestamp field "time". The timestamp has the format
+The log messages are formatted in the JSON format. Each log message has the field "level" which is a string respresentation of the log level, the field "msg" and timestamp field "time". The timestamp has the format
 
 ```
 // Layout for timestamp in the log message
-timeLayout string = "2006-01-02 15:04:05 -0700 MST"
+timeLayout string = time.RFC3339Nano
 ```
 
 ## Example
@@ -142,22 +142,9 @@ func main() {
 }
 ```
 
-Output
-
-```
-{"log":{"level":"trace","message":"trace","time":"2023-01-21 12:51:56 +0100 CET"}}
-{"log":{"level":"debug","message":"debug","time":"2023-01-21 12:51:56 +0100 CET"}}
-{"log":{"level":"info","message":"info","time":"2023-01-21 12:51:56 +0100 CET"}}
-{"log":{"level":"warn","message":"warn","time":"2023-01-21 12:51:56 +0100 CET"}}
-{"log":{"level":"error","message":"error","time":"2023-01-21 12:51:56 +0100 CET"}}
-{"log":{"level":"fatal","message":"fatal","time":"2023-01-21 12:51:56 +0100 CET"}}
-```
-
 ## Links
 
 [Godoc](https://pkg.go.dev/github.com/thorsphere/tslog)
-
-[Gocover.io](https://gocover.io/github.com/thorsphere/tslog)
 
 [Go Report Card](https://goreportcard.com/report/github.com/thorsphere/tslog)
 

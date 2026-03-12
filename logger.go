@@ -5,10 +5,10 @@ package tslog
 
 // Import standard library packages, tserr and tsfio.
 import (
-	"fmt" // fmt
-	"io"  // io
-	"log" // log
-	"os"  // os
+	"fmt"      // fmt
+	"io"       // io
+	"log/slog" // slog
+	"os"       // os
 
 	"github.com/thorstenrie/tserr" // tserr
 	"github.com/thorstenrie/tsfio" // tsfio
@@ -17,21 +17,33 @@ import (
 // Logger contains a log.logger for logging and the minimum level for logging.
 // The minimum level for logging is set with SetLevel.
 type Logger struct {
-	minLvl int            // minimum level for logging
-	logger *log.Logger    // for logging
-	out    io.Writer      // file for logging
-	outFn  tsfio.Filename // filename for logging
+	minLvl   *slog.LevelVar // minimum level for logging
+	logger   *slog.Logger   // for logging
+	out      io.Writer      // file for logging
+	outFn    tsfio.Filename // filename for logging
+	outOwned bool           // whether the output file is owned by the logger and should be closed by it
 }
 
 // New creates a new logger with default minimum level Info for logging. To alter
 // the minimum level for logging use SetLevel. Logging is set to Stdout. To
 // change logging output use SetOutput.
 func New() *Logger {
+	// Set output to os.Stdout
+	o := os.Stdout
+	// Create a new slog.LevelVar for the minimum level for logging
+	l := new(slog.LevelVar)
+	// Set the minimum level for logging to defaultMinLvl
+	l.Set(slog.Level(defaultMinLvl))
+	// Create a new slog.Handler for JSON logging with output o and minimum level l
+	h := slog.NewJSONHandler(o, &slog.HandlerOptions{AddSource: false, Level: l, ReplaceAttr: level})
+	// Return a new Logger with the created slog.Handler, output o and
+	// output filename StdoutLogger
 	return &Logger{
-		minLvl: defaultMinLvl,
-		logger: log.New(os.Stdout, "", 0),
-		out:    os.Stdout,
-		outFn:  StdoutLogger,
+		minLvl:   l,
+		logger:   slog.New(h),
+		out:      o,
+		outFn:    StdoutLogger,
+		outOwned: false,
 	}
 }
 
@@ -41,26 +53,26 @@ func New() *Logger {
 // level is lower than Trace level, the lowest level, the minimum level is set
 // to Trace. If the provided level is higher than Fatal level, the highest level,
 // the minimum level is set to Fatal.
-func (l *Logger) SetLevel(level int) error {
+func (l *Logger) SetLevel(level Level) error {
 	// Initially set error e to nil
 	var e error = nil
 	// If level is lower than Trace, the lowest level, return an error and
 	// set the minimum level to Trace.
-	if level < TraceLevel {
+	if level < traceLevel {
 		// Set error to not existent
 		e = tserr.NotExistent(fmt.Sprintf("log level %d", level))
 		// Set minimum level to Trace level
-		l.minLvl = TraceLevel
+		l.minLvl.Set(slog.Level(traceLevel))
 		// If level is higher than Fatal, the highest level, return an error and
 		// set the minimum level to Fatal.
-	} else if level > FatalLevel {
+	} else if level > fatalLevel {
 		// Set error to not existent
 		e = tserr.NotExistent(fmt.Sprintf("log level %d", level))
 		// Set minimum level to Fatal level
-		l.minLvl = FatalLevel
+		l.minLvl.Set(slog.Level(fatalLevel))
 	} else {
 		// Set minimum level to provided level
-		l.minLvl = level
+		l.minLvl.Set(slog.Level(level))
 	}
 	// Return e
 	return e
@@ -104,12 +116,7 @@ func (l *Logger) SetOutput(fn tsfio.Filename) error {
 			// Return error
 			return tserr.Op(&tserr.OpArgs{Op: "create temp file", Fn: p, Err: err})
 		}
-		// Activate logging to f
-		l.logger.SetOutput(f)
-		// Set l.out to f
-		l.out = f
-		// Set logging output filename to TmpLogger
-		l.outFn = TmpLogger
+		l.setFile(f, TmpLogger, true)
 		// Return nil
 		return nil
 	}
@@ -131,43 +138,38 @@ func (l *Logger) SetOutput(fn tsfio.Filename) error {
 		// Return error
 		return tserr.Op(&tserr.OpArgs{Op: "open file", Fn: string(fn), Err: e})
 	}
-
-	// Set Ouptut to file f
-	l.logger.SetOutput(f)
-	// Set l.out to f
-	l.out = f
-	// Set logging output filename to fn
-	l.outFn = fn
+	// Set logging to file f with filename fn.
+	l.setFile(f, fn, true)
 	// Return nil
 	return nil
 }
 
-// Trace logs a message at Trace level. It returns an error if JSON encoding of msg fails.
-func (l *Logger) Trace(msg string) error {
-	return l.tryLog(TraceLevel, msg)
+// Trace logs a message at Trace level.
+func (l *Logger) Trace(msg string) {
+	l.tryLog(traceLevel, msg)
 }
 
-// Debug logs a message at Debug level. It returns an error if JSON encoding of msg fails.
-func (l *Logger) Debug(msg string) error {
-	return l.tryLog(DebugLevel, msg)
+// Debug logs a message at Debug level.
+func (l *Logger) Debug(msg string) {
+	l.tryLog(debugLevel, msg)
 }
 
-// Info logs a message at Info level. It returns an error if JSON encoding of msg fails.
-func (l *Logger) Info(msg string) error {
-	return l.tryLog(InfoLevel, msg)
+// Info logs a message at Info level.
+func (l *Logger) Info(msg string) {
+	l.tryLog(infoLevel, msg)
 }
 
-// Warn logs a message at Warn level. It returns an error if JSON encoding of msg fails.
-func (l *Logger) Warn(msg string) error {
-	return l.tryLog(WarnLevel, msg)
+// Warn logs a message at Warn level.
+func (l *Logger) Warn(msg string) {
+	l.tryLog(warnLevel, msg)
 }
 
-// Error logs error err at Error level. It returns an error if JSON encoding of msg fails.
-func (l *Logger) Error(err error) error {
-	return l.tryLog(ErrorLevel, err.Error())
+// Error logs error err at Error level.
+func (l *Logger) Error(err error) {
+	l.tryLog(errorLevel, err.Error())
 }
 
-// Fatal logs error err at Fatal level. It returns an error if JSON encoding of msg fails.
-func (l *Logger) Fatal(err error) error {
-	return l.tryLog(FatalLevel, err.Error())
+// Fatal logs error err at Fatal level.
+func (l *Logger) Fatal(err error) {
+	l.tryLog(fatalLevel, err.Error())
 }

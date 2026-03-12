@@ -5,20 +5,19 @@ package tslog
 
 // Import standard library packages, tserr and tsfio.
 import (
-	"encoding/json" // json
-	"errors"
-	"fmt" // io
+	// json
+	"errors" // errors
+	"fmt"    // io
 
 	"testing" // testing
-	"time"    // time
-
+	// time
 	"github.com/thorstenrie/tserr" // tserr
 	"github.com/thorstenrie/tsfio" // tsfio
 )
 
 // A testcase serves input data for tests. A testcases contains the level and message.
 type testcase struct {
-	level int    // Log level
+	level Level  // Log level
 	in    string // Log message
 }
 
@@ -33,12 +32,12 @@ type testingtype interface {
 // Slice of testcases
 var (
 	testcases = []*testcase{
-		{TraceLevel, "test"},
-		{DebugLevel, " "},
-		{InfoLevel, "Hello World!"},
-		{WarnLevel, "Warning!"},
-		{ErrorLevel, "!12345"},
-		{FatalLevel, "\n"},
+		{traceLevel, "test"},
+		{debugLevel, " "},
+		{infoLevel, "Hello World!"},
+		{warnLevel, "Warning!"},
+		{errorLevel, "!12345"},
+		{fatalLevel, "\n"},
 	}
 )
 
@@ -60,7 +59,7 @@ func TestDefaultLog(t *testing.T) {
 // TestStdout performs logging with the default logger set to stdout.
 // Expected result is logging to Stdout.
 func TestStdout(t *testing.T) {
-	// Set ouput of the default logger to Stdout
+	// Set output of the default logger to Stdout
 	SetOutput(StdoutLogger)
 	// Perform logging of testcases
 	testLogAll(t, testcases)
@@ -69,7 +68,7 @@ func TestStdout(t *testing.T) {
 // TestDiscard performs logging with the default logger set to discard.
 // Expected result is no logging.
 func TestDiscard(t *testing.T) {
-	// Set ouput of the default logger to discard
+	// Set output of the default logger to discard
 	SetOutput(DiscardLogger)
 	// Perform logging of testcases
 	testLogAll(t, testcases)
@@ -113,9 +112,9 @@ func TestLogger(t *testing.T) {
 		t.Error(tserr.Op(&tserr.OpArgs{Op: "Set output", Fn: string(fn), Err: err}))
 	}
 	// Set logging level to Trace
-	if err := lg.SetLevel(TraceLevel); err != nil {
+	if err := lg.SetLevel(traceLevel); err != nil {
 		// Record an error, if SetLevel fails
-		t.Error(tserr.Op(&tserr.OpArgs{Op: fmt.Sprintf("Set level to %d for", TraceLevel), Fn: string(fn), Err: err}))
+		t.Error(tserr.Op(&tserr.OpArgs{Op: fmt.Sprintf("Set level to %d for", traceLevel), Fn: string(fn), Err: err}))
 	}
 	// Log all testcases using logger lg
 	testLoggerAll(t, testcases, lg)
@@ -138,9 +137,9 @@ func TestLog(t *testing.T) {
 		t.Error(tserr.Op(&tserr.OpArgs{Op: "Set output", Fn: string(fn), Err: err}))
 	}
 	// Set logging level to Trace
-	if err := SetLevel(TraceLevel); err != nil {
+	if err := SetLevel(traceLevel); err != nil {
 		// Record an error, if SetLevel fails
-		t.Error(tserr.Op(&tserr.OpArgs{Op: fmt.Sprintf("Set level to %d", TraceLevel), Fn: string(fn), Err: err}))
+		t.Error(tserr.Op(&tserr.OpArgs{Op: fmt.Sprintf("Set level to %d", traceLevel), Fn: string(fn), Err: err}))
 	}
 	// Log all testcases using the default predefined standard logger
 	testLogAll(t, testcases)
@@ -153,12 +152,12 @@ func TestLog(t *testing.T) {
 // returns nil.
 func TestSetLevelErr(t *testing.T) {
 	// Set log level minus one below Trace level
-	if err := SetLevel(TraceLevel - 1); err == nil {
+	if err := SetLevel(traceLevel - 1); err == nil {
 		// Record an error if SetLevel returns nil
 		t.Error(tserr.NilFailed("Set level"))
 	}
 	// Set log level plus one above Fatal level
-	if err := SetLevel(FatalLevel + 1); err == nil {
+	if err := SetLevel(fatalLevel + 1); err == nil {
 		// Record an error if SetLevel returns nil
 		t.Error(tserr.NilFailed("Set level"))
 	}
@@ -185,7 +184,7 @@ func testLevel(t *testing.T, tf testfunc) {
 		panic("nil pointer")
 	}
 	// Create an array with all log levels from Trace level to Fatal level
-	lvls := [6]int{TraceLevel, DebugLevel, InfoLevel, WarnLevel, ErrorLevel, FatalLevel}
+	lvls := [6]Level{traceLevel, debugLevel, infoLevel, warnLevel, errorLevel, fatalLevel}
 	// Create the temporary file fn
 	fn := tmp(t)
 	// Set log output to the temporary file fn
@@ -204,7 +203,7 @@ func testLevel(t *testing.T, tf testfunc) {
 
 // testTrace implements testfunc. It sets log level to v, logs a testcase at Trace level
 // and evaluates the output in file fn.
-func testTrace(t *testing.T, v int, fn tsfio.Filename) {
+func testTrace(t *testing.T, v Level, fn tsfio.Filename) {
 	// Panic if t is nil
 	if t == nil {
 		panic("nil pointer")
@@ -215,12 +214,9 @@ func testTrace(t *testing.T, v int, fn tsfio.Filename) {
 		t.Error(tserr.Op(&tserr.OpArgs{Op: "Set level", Fn: fmt.Sprint(v), Err: err}))
 	}
 	// Create testcase with log level Trace
-	tc := testcase{level: TraceLevel, in: "test"}
+	tc := testcase{level: traceLevel, in: "test"}
 	// Log testcase on log level Trace
-	if err := Trace(tc.in); err != nil {
-		// Record an error, if Trace fails
-		t.Error(tserr.Op(&tserr.OpArgs{Op: "Trace for level", Fn: fmt.Sprint(v), Err: err}))
-	}
+	Trace(tc.in)
 	// Read contents of file fn
 	in, e := tsfio.ReadFile(fn)
 	// Record an error, if ReadFile fails
@@ -233,7 +229,7 @@ func testTrace(t *testing.T, v int, fn tsfio.Filename) {
 		t.Error(tserr.Op(&tserr.OpArgs{Op: "ResetFile", Fn: string(fn), Err: err}))
 	}
 	// Evaluate log message from fn, in case v equals Trace level
-	if v == TraceLevel {
+	if v == traceLevel {
 		testMessage(t, in, &tc)
 	} else {
 		// Check fn for its length, in case v equals a higher than Trace level
@@ -247,7 +243,7 @@ func testTrace(t *testing.T, v int, fn tsfio.Filename) {
 
 // testFatal implements testfunc. It sets log level to v, logs a testcase at Fatal level
 // and evaluates the output in file fn.
-func testFatal(t *testing.T, v int, fn tsfio.Filename) {
+func testFatal(t *testing.T, v Level, fn tsfio.Filename) {
 	// Panic if t is nil
 	if t == nil {
 		panic("nil pointer")
@@ -258,12 +254,9 @@ func testFatal(t *testing.T, v int, fn tsfio.Filename) {
 		t.Error(tserr.Op(&tserr.OpArgs{Op: "Set level", Fn: fmt.Sprint(v), Err: err}))
 	}
 	// Create testcase with log level Fatal
-	tc := testcase{level: FatalLevel, in: "test"}
+	tc := testcase{level: fatalLevel, in: "test"}
 	// Log testcase on log level Fatal
-	if err := Fatal(errors.New(tc.in)); err != nil {
-		// Record an error, if Trace fails
-		t.Error(tserr.Op(&tserr.OpArgs{Op: "Fatal for level", Fn: fmt.Sprint(v), Err: err}))
-	}
+	Fatal(errors.New(tc.in))
 	// Reset file fn
 	in, e := tsfio.ReadFile(fn)
 	// Record an error, if ReadFile fails
@@ -277,46 +270,6 @@ func testFatal(t *testing.T, v int, fn tsfio.Filename) {
 	}
 	// Evaluate log message from fn
 	testMessage(t, in, &tc)
-}
-
-// testMessage checks the prefix and the contents of the log message in.
-// The expected prefix and the expected contents is compared to the actual log message.
-// It panics if t is nil. The execution stops if want or in are nil. The test fails
-// if Unmarchal fails, the actual prefix does not match the expected prefix or if the
-// expected message does not equal the actual message.
-func testMessage(t *testing.T, in []byte, want *testcase) {
-	// Panic if t is nil
-	if t == nil {
-		panic("nil pointer")
-	}
-	// Execution stops if want or in are nil
-	if (want == nil) || (in == nil) {
-		t.Fatal(tserr.NilPtr())
-	}
-	// Retrieve wanted log level as string
-	wantl, err := level(want.level)
-	// Record error if the log level does not exit
-	if err != nil {
-		t.Error(tserr.NotExistent(fmt.Sprintf("log level %d", want.level)))
-	}
-	// Unmarshal log message in
-	var lmsg logwrap
-	if err := json.Unmarshal(in, &lmsg); err != nil {
-		// Record an error if Unmarshal fails
-		t.Error(tserr.Op(&tserr.OpArgs{Op: "json unmarshal", Fn: string(in), Err: err}))
-	}
-	// Record an error if the expected log level does not equal the actual log level
-	if lmsg.L.Lvl != wantl {
-		t.Error(tserr.NotEqualStr(&tserr.NotEqualStrArgs{X: wantl, Y: lmsg.L.Lvl}))
-	}
-	// Record an error if the expected log message does not equal the actual log message
-	if lmsg.L.Msg != want.in {
-		t.Error(tserr.NotEqualStr(&tserr.NotEqualStrArgs{X: want.in, Y: lmsg.L.Msg}))
-	}
-	// Record an error if the timestamp of the log message cannot be parsed
-	if _, err := time.Parse(timeLayout, lmsg.L.Now); err != nil {
-		t.Error(tserr.Check(&tserr.CheckArgs{F: lmsg.L.Now, Err: err}))
-	}
 }
 
 // testLogAll logs all testcases in tc. It panics, if t is nil. It records an error if
@@ -349,21 +302,24 @@ func testLog(tc *testcase) error {
 	}
 	// Log according to the defined log level in testcase tc
 	switch tc.level {
-	case TraceLevel:
-		return Trace(tc.in)
-	case DebugLevel:
-		return Debug(tc.in)
-	case InfoLevel:
-		return Info(tc.in)
-	case WarnLevel:
-		return Warn(tc.in)
-	case ErrorLevel:
-		return Error(errors.New(tc.in))
-	case FatalLevel:
-		return Fatal(errors.New(tc.in))
+	case traceLevel:
+		Trace(tc.in)
+	case debugLevel:
+		Debug(tc.in)
+	case infoLevel:
+		Info(tc.in)
+	case warnLevel:
+		Warn(tc.in)
+	case errorLevel:
+		Error(errors.New(tc.in))
+	case fatalLevel:
+		Fatal(errors.New(tc.in))
+	default:
+		// Return an error if the log level does not exist
+		return tserr.NotExistent(fmt.Sprintf("%d", tc.level))
 	}
-	// Return an error if the log level does not exist
-	return tserr.NotExistent(fmt.Sprintf("%d", tc.level))
+	// Return nil
+	return nil
 }
 
 // testLoggerAll logs all testcases in tc using the logger l. It panics
@@ -404,19 +360,22 @@ func testLogger(tc *testcase, l *Logger) error {
 	// Log testcase according to the defined log level
 	// in the testcase
 	switch tc.level {
-	case TraceLevel:
-		return l.Trace(tc.in)
-	case DebugLevel:
-		return l.Debug(tc.in)
-	case InfoLevel:
-		return l.Info(tc.in)
-	case WarnLevel:
-		return l.Warn(tc.in)
-	case ErrorLevel:
-		return l.Error(errors.New(tc.in))
-	case FatalLevel:
-		return l.Fatal(errors.New(tc.in))
+	case traceLevel:
+		l.Trace(tc.in)
+	case debugLevel:
+		l.Debug(tc.in)
+	case infoLevel:
+		l.Info(tc.in)
+	case warnLevel:
+		l.Warn(tc.in)
+	case errorLevel:
+		l.Error(errors.New(tc.in))
+	case fatalLevel:
+		l.Fatal(errors.New(tc.in))
+	default:
+		// Return an error if the log level in the testcase does not exist.
+		return tserr.NotExistent(fmt.Sprintf("%d", tc.level))
 	}
-	// Return an error if the log level in the testcase does not exist.
-	return tserr.NotExistent(fmt.Sprintf("%d", tc.level))
+	// Return nil
+	return nil
 }

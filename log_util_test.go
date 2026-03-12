@@ -5,21 +5,44 @@ package tslog
 
 // Import standard library packages, tserr and tsfio.
 import (
-	"bufio"   // bufio
-	"bytes"   // bytes
+	"bufio" // bufio
+	"bytes" // bytes
+	"encoding/json"
+	"fmt"     // fmt
 	"os"      // os
 	"testing" // testing
+	"time"
 
 	"github.com/thorstenrie/tserr" // tserr
 	"github.com/thorstenrie/tsfio" // tsfio
 )
 
 // A testfunc is a function testing logging into a file.
-type testfunc func(*testing.T, int, tsfio.Filename)
+type testfunc func(*testing.T, Level, tsfio.Filename)
 
 // Interface fio is constrained to type tsfio.Filename and tsfio.Directory
 type fio interface {
 	tsfio.Filename | tsfio.Directory
+}
+
+// Struct logmsg contains the content of the log message.
+// - Lvl: log level as string
+// - Msg: log message as string
+// - Now: timestamp as string
+type logmsg struct {
+	Lvl string `json:"level"` // level
+	Msg string `json:"msg"`   // message
+	Now string `json:"time"`  // timestamp
+}
+
+// Mapping Level to string
+var levelToString = map[Level]string{
+	traceLevel: traceString,
+	debugLevel: debugString,
+	infoLevel:  infoString,
+	warnLevel:  warnString,
+	errorLevel: errorString,
+	fatalLevel: fatalString,
 }
 
 // tmpLog creates a temp log file tslog_test_* in the temp directory.
@@ -149,4 +172,55 @@ func evaluate(t *testing.T, fn tsfio.Filename) {
 	if i != m {
 		t.Error(tserr.Equal(&tserr.EqualArgs{Var: "No. lines", Actual: int64(i), Want: int64(m)}))
 	}
+}
+
+// testMessage checks the prefix and the contents of the log message in.
+// The expected prefix and the expected contents is compared to the actual log message.
+// It panics if t is nil. The execution stops if want or in are nil. The test fails
+// if Unmarchal fails, the actual prefix does not match the expected prefix or if the
+// expected message does not equal the actual message.
+func testMessage(t *testing.T, in []byte, want *testcase) {
+	// Panic if t is nil
+	if t == nil {
+		panic("nil pointer")
+	}
+	// Execution stops if want or in are nil
+	if (want == nil) || (in == nil) {
+		t.Fatal(tserr.NilPtr())
+	}
+	// Retrieve wanted log level as string
+	wantl, err := levelStr(want.level)
+	// Record an error if levelStr returns an error
+	if err != nil {
+		t.Error(tserr.Op(&tserr.OpArgs{Op: "level string", Fn: fmt.Sprint(want.level), Err: err}))
+	}
+	// Unmarshal log message in
+	var lmsg logmsg
+	if err := json.Unmarshal(in, &lmsg); err != nil {
+		// Record an error if Unmarshal fails
+		t.Error(tserr.Op(&tserr.OpArgs{Op: "json unmarshal", Fn: string(in), Err: err}))
+	}
+	// Record an error if the expected log level does not equal the actual log level
+	if lmsg.Lvl != wantl {
+		t.Error(tserr.NotEqualStr(&tserr.NotEqualStrArgs{X: wantl, Y: lmsg.Lvl}))
+	}
+	// Record an error if the expected log message does not equal the actual log message
+	if lmsg.Msg != want.in {
+		t.Error(tserr.NotEqualStr(&tserr.NotEqualStrArgs{X: want.in, Y: lmsg.Msg}))
+	}
+	// Record an error if the timestamp of the log message cannot be parsed
+	if _, err := time.Parse(timeLayout, lmsg.Now); err != nil {
+		t.Error(tserr.Check(&tserr.CheckArgs{F: lmsg.Now, Err: err}))
+	}
+}
+
+// String implements fmt.Stringer for Level
+func levelStr(lvl Level) (string, error) {
+	// Return the string for the log level, if it is defined
+	if s, ok := levelToString[lvl]; ok {
+		// Return the string for the log level and nil, if the log level is defined
+		return s, nil
+	}
+	// Return an error for undefined levels
+	return errorString, tserr.NotExistent(fmt.Sprintf("log level %d", lvl))
 }

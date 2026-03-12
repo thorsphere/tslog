@@ -15,7 +15,16 @@ package tslog
 
 // Import tsfio.
 import (
+	"log/slog"
+	"time"
+
 	"github.com/thorstenrie/tsfio" // tsfio
+)
+
+// Level representes the severity of a logging event.
+// The levels are Trace, Debug, Info, Warn, Error and Fatal.
+type (
+	Level slog.Level
 )
 
 // Strings for special loggers
@@ -25,31 +34,41 @@ const (
 	TmpLogger     tsfio.Filename = tsfio.Filename("tmp")     // temporary file
 )
 
-// Enum for log levels.
+// Levels for log levels.
 const (
 	// Trace: log the execution of code of the app
-	TraceLevel int = 1
+	traceLevel Level = Level(slog.LevelDebug - 4)
 	// Debug: log detailed events for debugging of the app
-	DebugLevel int = 2
+	debugLevel Level = Level(slog.LevelDebug)
 	// Info: log an event under normal conditions of the app
-	InfoLevel int = 3
+	infoLevel Level = Level(slog.LevelInfo)
 	// Warn: log an unintended event, which is tried to be recovered and potentially
 	// impacting execution of the app
-	WarnLevel int = 4
+	warnLevel Level = Level(slog.LevelWarn)
 	// Error: log an unexpected event with at least one function of the app being not operable
-	ErrorLevel int = 5
+	errorLevel Level = Level(slog.LevelError)
 	// Fatal: log an unexpected critical event forcing a shutdown of the app
-	FatalLevel int = 6
+	fatalLevel Level = Level(slog.LevelError + 4)
+)
+
+// Strings for log levels as string.
+const (
+	traceString string = "trace" // Trace level as string
+	debugString string = "debug" // Debug level as string
+	infoString  string = "info"  // Info level as string
+	warnString  string = "warn"  // Warn level as string
+	errorString string = "error" // Error level as string
+	fatalString string = "fatal" // Fatal level as string
 )
 
 // Defaults for logging
 const (
 	// Layout for timestamp in the log message
-	timeLayout string = "2006-01-02 15:04:05 -0700 MST"
+	timeLayout string = time.RFC3339Nano
 	// Root element for temporary file
 	defaultPattern string = "tslog"
 	// Default log level is InfoLevel
-	defaultMinLvl int = InfoLevel
+	defaultMinLvl Level = infoLevel
 )
 
 // Global logger to provide a predefined standard logger
@@ -65,7 +84,7 @@ func Default() *Logger {
 // SetLevel sets the logging level. All levels equal or higher than the set level
 // are logged. All log messages with levels below the set level are discarded.
 // SetLevel returns an error for undefined levels, otherwise nil.
-func SetLevel(level int) error {
+func SetLevel(level Level) error {
 	return globalLogger.SetLevel(level)
 }
 
@@ -79,37 +98,31 @@ func SetOutput(fn tsfio.Filename) error {
 }
 
 // Trace logs a message at Trace level on the global predefined standard logger.
-// It returns an error if JSON encoding of msg fails.
-func Trace(msg string) error {
-	return globalLogger.Trace(msg)
+func Trace(msg string) {
+	globalLogger.Trace(msg)
 }
 
 // Debug logs a message at Debug level on the global predefined standard logger.
-// It returns an error if JSON encoding of msg fails.
-func Debug(msg string) error {
-	return globalLogger.Debug(msg)
+func Debug(msg string) {
+	globalLogger.Debug(msg)
 }
 
 // Info logs a message at Info level on the global predefined standard logger.
-// It returns an error if JSON encoding of msg fails.
-func Info(msg string) error {
-	return globalLogger.Info(msg)
+func Info(msg string) {
+	globalLogger.Info(msg)
 }
 
 // Warn logs a message at Warn level on the global predefined standard logger.
-// It returns an error if JSON encoding of msg fails.
-func Warn(msg string) error {
-	return globalLogger.Warn(msg)
+func Warn(msg string) {
+	globalLogger.Warn(msg)
 }
 
 // Error logs error err at Error level on the global predefined standard logger.
-// It returns an error if JSON encoding of msg fails.
-func Error(err error) error {
-	return globalLogger.Error(err)
+func Error(err error) {
+	globalLogger.Error(err)
 }
 
 // Fatal logs error err at Fatal level on the global predefined standard logger.
-// It returns an error if JSON encoding of msg fails.
-func Fatal(err error) error {
-	return globalLogger.Fatal(err)
+func Fatal(err error) {
+	globalLogger.Fatal(err)
 }
