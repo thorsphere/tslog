@@ -18,7 +18,7 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/thorstenrie/tsfio" // tsfio
+	"github.com/thorsphere/tsfio" // tsfio
 )
 
 // Level represents the severity of a logging event.

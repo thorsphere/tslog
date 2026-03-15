@@ -3,6 +3,6 @@ module github.com/thorsphere/tslog
 go 1.26
 
 require (
-	github.com/thorstenrie/tserr v1.5.1
-	github.com/thorstenrie/tsfio v1.1.1
+	github.com/thorsphere/tsfio v1.6.0
+	github.com/thorstenrie/tserr v1.15.0
 )

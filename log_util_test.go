@@ -13,8 +13,8 @@ import (
 	"testing" // testing
 	"time"
 
+	"github.com/thorsphere/tsfio"  // tsfio
 	"github.com/thorstenrie/tserr" // tserr
-	"github.com/thorstenrie/tsfio" // tsfio
 )
 
 // A testfunc is a function testing logging into a file.
@@ -202,11 +202,11 @@ func testMessage(t *testing.T, in []byte, want *testcase) {
 	}
 	// Record an error if the expected log level does not equal the actual log level
 	if lmsg.Lvl != wantl {
-		t.Error(tserr.NotEqualStr(&tserr.NotEqualStrArgs{X: wantl, Y: lmsg.Lvl}))
+		t.Error(tserr.EqualStr(&tserr.EqualStrArgs{Var: "Level", Want: wantl, Actual: lmsg.Lvl}))
 	}
 	// Record an error if the expected log message does not equal the actual log message
 	if lmsg.Msg != want.in {
-		t.Error(tserr.NotEqualStr(&tserr.NotEqualStrArgs{X: want.in, Y: lmsg.Msg}))
+		t.Error(tserr.EqualStr(&tserr.EqualStrArgs{Var: "Message", Want: want.in, Actual: lmsg.Msg}))
 	}
 	// Record an error if the timestamp of the log message cannot be parsed
 	if _, err := time.Parse(timeLayout, lmsg.Now); err != nil {

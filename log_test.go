@@ -11,8 +11,8 @@ import (
 
 	"testing" // testing
 	// time
+	"github.com/thorsphere/tsfio"  // tsfio
 	"github.com/thorstenrie/tserr" // tserr
-	"github.com/thorstenrie/tsfio" // tsfio
 )
 
 // A testcase serves input data for tests. A testcases contains the level and message.

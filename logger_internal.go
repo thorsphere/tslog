@@ -10,8 +10,8 @@ import (
 	"log/slog" // slog
 	"os"       // os
 
+	"github.com/thorsphere/tsfio"  // tsfio
 	"github.com/thorstenrie/tserr" // tserr
-	"github.com/thorstenrie/tsfio" // tsfio
 )
 
 func (l *Logger) closeOut() error {
