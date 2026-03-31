@@ -13,9 +13,9 @@ import (
 	"testing"       // testing
 	"time"          // time
 
-	"github.com/thorsphere/tsfio"  // tsfio
-	"github.com/thorsphere/tslog"  // tslog
-	"github.com/thorstenrie/tserr" // tserr
+	"github.com/thorsphere/tserr" // tserr
+	"github.com/thorsphere/tsfio" // tsfio
+	"github.com/thorsphere/tslog" // tslog
 )
 
 // A testfunc is a function testing logging into a file.

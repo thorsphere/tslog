@@ -10,8 +10,8 @@ import (
 	"log/slog" // slog
 	"os"       // os
 
-	"github.com/thorsphere/tsfio"  // tsfio
-	"github.com/thorstenrie/tserr" // tserr
+	"github.com/thorsphere/tserr" // tserr
+	"github.com/thorsphere/tsfio" // tsfio
 )
 
 // Logger contains a log.logger for logging and the minimum level for logging.

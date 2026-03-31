@@ -10,8 +10,8 @@ import (
 	"log/slog" // slog
 	"os"       // os
 
-	"github.com/thorsphere/tsfio"  // tsfio
-	"github.com/thorstenrie/tserr" // tserr
+	"github.com/thorsphere/tserr" // tserr
+	"github.com/thorsphere/tsfio" // tsfio
 )
 
 // closeOut closes the output file for logging, if it is owned by the logger and

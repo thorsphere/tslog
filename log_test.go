@@ -9,9 +9,9 @@ import (
 	"fmt"     // fmt
 	"testing" // testing
 
-	"github.com/thorsphere/tsfio"  // tsfio
-	"github.com/thorsphere/tslog"  // tslog
-	"github.com/thorstenrie/tserr" // tserr
+	"github.com/thorsphere/tserr" // tserr
+	"github.com/thorsphere/tsfio" // tsfio
+	"github.com/thorsphere/tslog" // tslog
 )
 
 // A testcase serves input data for tests. A testcases contains the level and message.
