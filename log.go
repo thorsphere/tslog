@@ -15,8 +15,8 @@ package tslog
 
 // Import tsfio.
 import (
-	"log/slog"
-	"time"
+	"log/slog" // slog
+	"time"     // time
 
 	"github.com/thorsphere/tsfio" // tsfio
 )
@@ -37,18 +37,18 @@ const (
 // Levels for log levels.
 const (
 	// Trace: log the execution of code of the app
-	traceLevel Level = Level(slog.LevelDebug - 4)
+	TraceLevel Level = Level(slog.LevelDebug - 4)
 	// Debug: log detailed events for debugging of the app
-	debugLevel Level = Level(slog.LevelDebug)
+	DebugLevel Level = Level(slog.LevelDebug)
 	// Info: log an event under normal conditions of the app
-	infoLevel Level = Level(slog.LevelInfo)
+	InfoLevel Level = Level(slog.LevelInfo)
 	// Warn: log an unintended event, which is tried to be recovered and potentially
 	// impacting execution of the app
-	warnLevel Level = Level(slog.LevelWarn)
+	WarnLevel Level = Level(slog.LevelWarn)
 	// Error: log an unexpected event with at least one function of the app being not operable
-	errorLevel Level = Level(slog.LevelError)
+	ErrorLevel Level = Level(slog.LevelError)
 	// Fatal: log an unexpected critical event forcing a shutdown of the app
-	fatalLevel Level = Level(slog.LevelError + 4)
+	FatalLevel Level = Level(slog.LevelError + 4)
 )
 
 // Strings for log levels as string.
@@ -68,7 +68,7 @@ const (
 	// Root element for temporary file
 	defaultPattern string = "tslog"
 	// Default log level is InfoLevel
-	defaultMinLvl Level = infoLevel
+	defaultMinLvl Level = InfoLevel
 )
 
 // Global logger to provide a predefined standard logger

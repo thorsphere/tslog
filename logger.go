@@ -58,18 +58,18 @@ func (l *Logger) SetLevel(level Level) error {
 	var e error = nil
 	// If level is lower than Trace, the lowest level, return an error and
 	// set the minimum level to Trace.
-	if level < traceLevel {
+	if level < TraceLevel {
 		// Set error to not existent
 		e = tserr.NotExistent(fmt.Sprintf("log level %d", level))
 		// Set minimum level to Trace level
-		l.minLvl.Set(slog.Level(traceLevel))
+		l.minLvl.Set(slog.Level(TraceLevel))
 		// If level is higher than Fatal, the highest level, return an error and
 		// set the minimum level to Fatal.
-	} else if level > fatalLevel {
+	} else if level > FatalLevel {
 		// Set error to not existent
 		e = tserr.NotExistent(fmt.Sprintf("log level %d", level))
 		// Set minimum level to Fatal level
-		l.minLvl.Set(slog.Level(fatalLevel))
+		l.minLvl.Set(slog.Level(FatalLevel))
 	} else {
 		// Set minimum level to provided level
 		l.minLvl.Set(slog.Level(level))
@@ -146,30 +146,30 @@ func (l *Logger) SetOutput(fn tsfio.Filename) error {
 
 // Trace logs a message at Trace level.
 func (l *Logger) Trace(msg string) {
-	l.tryLog(traceLevel, msg)
+	l.tryLog(TraceLevel, msg)
 }
 
 // Debug logs a message at Debug level.
 func (l *Logger) Debug(msg string) {
-	l.tryLog(debugLevel, msg)
+	l.tryLog(DebugLevel, msg)
 }
 
 // Info logs a message at Info level.
 func (l *Logger) Info(msg string) {
-	l.tryLog(infoLevel, msg)
+	l.tryLog(InfoLevel, msg)
 }
 
 // Warn logs a message at Warn level.
 func (l *Logger) Warn(msg string) {
-	l.tryLog(warnLevel, msg)
+	l.tryLog(WarnLevel, msg)
 }
 
 // Error logs error err at Error level.
 func (l *Logger) Error(err error) {
-	l.tryLog(errorLevel, err.Error())
+	l.tryLog(ErrorLevel, err.Error())
 }
 
 // Fatal logs error err at Fatal level.
 func (l *Logger) Fatal(err error) {
-	l.tryLog(fatalLevel, err.Error())
+	l.tryLog(FatalLevel, err.Error())
 }

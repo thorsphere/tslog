@@ -14,6 +14,9 @@ import (
 	"github.com/thorstenrie/tserr" // tserr
 )
 
+// closeOut closes the output file for logging, if it is owned by the logger and
+// returns an error, if any. If the output file is not owned by the logger,
+// e.g. os.Stdout or os.Stderr, closeOut does not close the file and returns nil.
 func (l *Logger) closeOut() error {
 	// Do not close Stdout or Stderr
 	if !l.outOwned {
@@ -87,15 +90,15 @@ func level(groups []string, a slog.Attr) slog.Attr {
 		lvl := Level(a.Value.Any().(slog.Level))
 		// Return the string representation for log level lvl
 		switch {
-		case lvl <= traceLevel:
+		case lvl <= TraceLevel:
 			a.Value = slog.StringValue(traceString)
-		case lvl <= debugLevel:
+		case lvl <= DebugLevel:
 			a.Value = slog.StringValue(debugString)
-		case lvl <= infoLevel:
+		case lvl <= InfoLevel:
 			a.Value = slog.StringValue(infoString)
-		case lvl <= warnLevel:
+		case lvl <= WarnLevel:
 			a.Value = slog.StringValue(warnString)
-		case lvl <= errorLevel:
+		case lvl <= ErrorLevel:
 			a.Value = slog.StringValue(errorString)
 		default:
 			a.Value = slog.StringValue(fatalString)

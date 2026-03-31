@@ -1,24 +1,25 @@
 // Copyright (c) 2023-2026 thorsphere
 // All Rights Reserved. Use is governed with GNU Affero General Public License v3.0
 // that can be found in the LICENSE file.
-package tslog
+package tslog_test
 
 // Import standard library packages, tserr and tsfio.
 import (
-	"bufio" // bufio
-	"bytes" // bytes
-	"encoding/json"
-	"fmt"     // fmt
-	"os"      // os
-	"testing" // testing
-	"time"
+	"bufio"         // bufio
+	"bytes"         // bytes
+	"encoding/json" // json
+	"fmt"           // fmt
+	"os"            // os
+	"testing"       // testing
+	"time"          // time
 
 	"github.com/thorsphere/tsfio"  // tsfio
+	"github.com/thorsphere/tslog"  // tslog
 	"github.com/thorstenrie/tserr" // tserr
 )
 
 // A testfunc is a function testing logging into a file.
-type testfunc func(*testing.T, Level, tsfio.Filename)
+type testfunc func(*testing.T, tslog.Level, tsfio.Filename)
 
 // Interface fio is constrained to type tsfio.Filename and tsfio.Directory
 type fio interface {
@@ -36,14 +37,19 @@ type logmsg struct {
 }
 
 // Mapping Level to string
-var levelToString = map[Level]string{
-	traceLevel: traceString,
-	debugLevel: debugString,
-	infoLevel:  infoString,
-	warnLevel:  warnString,
-	errorLevel: errorString,
-	fatalLevel: fatalString,
+var levelToString = map[tslog.Level]string{
+	tslog.TraceLevel: "trace",
+	tslog.DebugLevel: "debug",
+	tslog.InfoLevel:  "info",
+	tslog.WarnLevel:  "warn",
+	tslog.ErrorLevel: "error",
+	tslog.FatalLevel: "fatal",
 }
+
+const (
+	// Layout for timestamp in the log message
+	timeLayout string = time.RFC3339Nano
+)
 
 // tmpLog creates a temp log file tslog_test_* in the temp directory.
 // It returns the temp filename. In case of errors tmpLog returns Stdout.
@@ -61,7 +67,7 @@ func tmp[T testingtype](tt T) tsfio.Filename {
 		// Record error
 		tt.Error(tserr.Op(&tserr.OpArgs{Op: "create", Fn: f.Name(), Err: err}))
 		// Return Stdout
-		return StdoutLogger
+		return tslog.StdoutLogger
 	}
 	// Retrieve filename of temporary file f
 	fn := tsfio.Filename(f.Name())
@@ -215,12 +221,12 @@ func testMessage(t *testing.T, in []byte, want *testcase) {
 }
 
 // String implements fmt.Stringer for Level
-func levelStr(lvl Level) (string, error) {
+func levelStr(lvl tslog.Level) (string, error) {
 	// Return the string for the log level, if it is defined
 	if s, ok := levelToString[lvl]; ok {
 		// Return the string for the log level and nil, if the log level is defined
 		return s, nil
 	}
 	// Return an error for undefined levels
-	return errorString, tserr.NotExistent(fmt.Sprintf("log level %d", lvl))
+	return "error", tserr.NotExistent(fmt.Sprintf("log level %d", lvl))
 }
