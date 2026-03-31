@@ -142,6 +142,18 @@ func main() {
 }
 ```
 
+[Go Playground](https://go.dev/play/p/lWrvK4UqDTD)
+
+Output
+```
+{"time":"2009-11-10T23:00:00Z","level":"trace","msg":"trace"}
+{"time":"2009-11-10T23:00:00Z","level":"debug","msg":"debug"}
+{"time":"2009-11-10T23:00:00Z","level":"info","msg":"info"}
+{"time":"2009-11-10T23:00:00Z","level":"warn","msg":"warn"}
+{"time":"2009-11-10T23:00:00Z","level":"error","msg":"error"}
+{"time":"2009-11-10T23:00:00Z","level":"fatal","msg":"fatal"}
+```
+
 ## Links
 
 [Godoc](https://pkg.go.dev/github.com/thorsphere/tslog)
