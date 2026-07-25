@@ -3,7 +3,7 @@
 ## Reporting a Vulnerability
 
 If you think you've identified a security issue, please send an email with all relevant details
-to security at thorsphere.com. Please do not report the issue publicly.
+to security at thorsphere dot com. Please do not report the issue publicly.
 
 ## Security Vulnerability Response
 
