@@ -1,6 +1,6 @@
-// Copyright (c) 2023-2026 thorsphere
-// All Rights Reserved. Use is governed with GNU Affero General Public License v3.0
-// that can be found in the LICENSE file.
+// Copyright (c) 2023-2026 thorsphere.
+// All Rights Reserved. Use is governed by the Functional Source License v1.1
+// (FSL-1.1-ALv2) that can be found in the LICENSE file.
 package tslog_test
 
 // Import standard library packages, tserr and tsfio.
@@ -176,7 +176,7 @@ func evaluate(t *testing.T, fn tsfio.Filename) {
 	}
 	// Record an error if no. lines in logging output file does not equal no. testcases
 	if i != m {
-		t.Error(tserr.Equal(&tserr.EqualArgs{Var: "No. lines", Actual: int64(i), Want: int64(m)}))
+		t.Error(tserr.EqualInt(&tserr.EqualIntArgs{Var: "No. lines", Actual: int64(i), Want: int64(m)}))
 	}
 }
 
