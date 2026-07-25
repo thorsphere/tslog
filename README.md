@@ -1,21 +1,13 @@
 # tslog
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/thorsphere/tslog)](https://goreportcard.com/report/github.com/thorsphere/tslog)
+[![PkgGoDev](https://pkg.go.dev/badge/mod/github.com/thorsphere/tslog)](https://pkg.go.dev/mod/github.com/thorsphere/tslog)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/thorsphere/tslog)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/thorsphere/tslog)
+![GitHub Top Language](https://img.shields.io/github/languages/top/thorsphere/tslog)
 [![CodeFactor](https://www.codefactor.io/repository/github/thorsphere/tslog/badge)](https://www.codefactor.io/repository/github/thorsphere/tslog)
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/thorsphere/tslog)
 
-[![PkgGoDev](https://pkg.go.dev/badge/mod/github.com/thorsphere/tslog)](https://pkg.go.dev/mod/github.com/thorsphere/tslog)
-![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/thorsphere/tslog)
-![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/thorsphere/tslog)
-
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/thorsphere/tslog)
-![GitHub last commit](https://img.shields.io/github/last-commit/thorsphere/tslog)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/thorsphere/tslog)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/thorsphere/tslog)
-![GitHub Top Language](https://img.shields.io/github/languages/top/thorsphere/tslog)
-![GitHub](https://img.shields.io/github/license/thorsphere/tslog)
-
-[Go](https://go.dev/) package for logging that tries to keep it simple ([KISS principle](https://en.wikipedia.org/wiki/KISS_principle)).
+Go package for logging.
 
 - **Simple**: Pre-defined global logger to Stdout without configuration and log levels Trace, Debug, Info, Warn, Error and Fatal.
 - **Easy to parse**: The log messages are formatted in JSON format.
@@ -38,16 +30,16 @@ A tslog logger is based on type [Logger](https://pkg.go.dev/slog#Logger) defined
 The predefined default logger is set to log to Stdout on Info level. The default logger can be used with the external functions
 
 ```
-func Trace(msg string) error
-func Debug(msg string) error 
-func Info(msg string) error
-func Warn(msg string) error
-func Error(err error) error
-func Fatal(err error) error
+func Trace(msg string)
+func Debug(msg string) 
+func Info(msg string)
+func Warn(msg string)
+func Error(err error)
+func Fatal(err error)
 ```
 
 Log levels `Error` and `Fatal` receive an error for logging.
-An error can be retrieved with package [tserr](https://pkg.go.dev/github.com/thorsphere/tserr), func [New](https://pkg.go.dev/errors#New) or or with func [Errorf](https://pkg.go.dev/fmr#Errorf)
+An error can be retrieved with package [tserr](https://pkg.go.dev/github.com/thorsphere/tserr), func [New](https://pkg.go.dev/errors#New) or with func [Errorf](https://pkg.go.dev/fmt#Errorf)
 
 The default logger can be retrieved with
 
@@ -85,23 +77,23 @@ A logger can be configured to log from a specific level and any higher level. Th
 
 ```
 // Trace: log the execution of code of the app
-traceLevel Level = Level(slog.LevelDebug - 4)
+TraceLevel Level = Level(slog.LevelDebug - 4)
 
 // Debug: log detailed events for debugging of the app
-debugLevel Level = Level(slog.LevelDebug)
+DebugLevel Level = Level(slog.LevelDebug)
 
 // Info: log an event under normal conditions of the app
-infoLevel Level = Level(slog.LevelInfo)
+InfoLevel Level = Level(slog.LevelInfo)
 
 // Warn: log an unintended event, which is tried to be recovered and potentially
 // impacting execution of the app
-warnLevel Level = Level(slog.LevelWarn)
+WarnLevel Level = Level(slog.LevelWarn)
 
 // Error: log an unexpected event with at least one function of the app being not operable
-errorLevel Level = Level(slog.LevelError)
+ErrorLevel Level = Level(slog.LevelError)
 
 // Fatal: log an unexpected critical event forcing a shutdown of the app
-fatalLevel Level = Level(slog.LevelError + 4)
+FatalLevel Level = Level(slog.LevelError + 4)
 ```
 
 The log level is set with
@@ -154,10 +146,28 @@ Output
 {"time":"2009-11-10T23:00:00Z","level":"fatal","msg":"fatal"}
 ```
 
-## Links
+## Documentation & Resources
 
-[Godoc](https://pkg.go.dev/github.com/thorsphere/tslog)
+- [Go Package Documentation](https://pkg.go.dev/github.com/thorsphere/tslog) — Complete API reference
+- [Open Source Insights](https://deps.dev/go/github.com%2Fthorsphere%2Ftslog) — Dependency analysis
 
-[Go Report Card](https://goreportcard.com/report/github.com/thorsphere/tslog)
+## ⚖️ License & Commercial Usage
 
-[Open Source Insights](https://deps.dev/go/github.com%2Fthorsphere%2Ftslog)
+Copyright (c) 2023-2026 thorsphere. All rights reserved.
+
+This project is licensed under the **Functional Source License v1.1 (FSL-1.1-ALv2)**. 
+
+* The use, modification, and redistribution of this Go package is completely free for private, educational, non-commercial, and internal purposes. 
+* If you are a company or institution looking to use this package in a commercial product, service, or business environment, you must secure a commercial license.
+* Each version of this software automatically converts to the fully open-source Apache License, Version 2.0 on the second anniversary of its release.
+
+For full details, please see the [LICENSE](LICENSE) file.
+
+### 💼 Commercial Licensing & Inquiries
+
+To purchase a commercial license or discuss support options, please reach out directly:
+
+* 📩 **Contact:** business at thorsphere dot com
+* 💬 **Response Time:** Usually within a couple of business days.
+
+*Please include your company name and a brief overview of your use case so I can provide the right licensing details.*
