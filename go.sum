@@ -2,7 +2,11 @@ github.com/thorsphere/tserr v1.17.0 h1:raeEctWnpao0SwWbBd9Dk/NerS1OHkm1N8zzBdQIw
 github.com/thorsphere/tserr v1.17.0/go.mod h1:RFYzM4J/cQaehAUFKf9yvVOkcGtl7CcymyS3qiOfgBA=
 github.com/thorsphere/tserr v1.20.4 h1:iZSFCFmj3otrWOVeT2amjmOu5temt+zCkTDzObz3bKw=
 github.com/thorsphere/tserr v1.20.4/go.mod h1:779lF6yFY5MXuJFpRqdBoTYLJTrxXx8yiwEDAsRN1sI=
+github.com/thorsphere/tserr v1.21.0 h1:rm9SQEmkiVPHDXYgRla8qUBFdDcrryvu2YczIYnbuXU=
+github.com/thorsphere/tserr v1.21.0/go.mod h1:yv3y4d0WwGHyBX7I3sWEovFilDU/pIksvSg5tYbuRD8=
 github.com/thorsphere/tsfio v1.7.0 h1:44p0zOqrmriM95PFj1gqSRae4xhxpJA1lVaNozuQ+Bg=
 github.com/thorsphere/tsfio v1.7.0/go.mod h1:OAinQ/FtwfjA3GxWaKGsFKwyhu5rIIy2T4lH/mccR0g=
 github.com/thorsphere/tsfio v1.8.1 h1:ZcQS8U/M3cndY7uivCm0nz7UOFnrIK3GztNCHKSCAhA=
 github.com/thorsphere/tsfio v1.8.1/go.mod h1:Ace1h2XgMA2kz4Q0OKOS7Khc++muRQjFXueqYexKdqw=
+github.com/thorsphere/tsfio v1.9.0 h1:3XkQVhfQBBYQq3kbpbY5I6GR0HxSAa/1NCEcSV9p854=
+github.com/thorsphere/tsfio v1.9.0/go.mod h1:BC+z8MPZI/pUaeIJJi+kE4AfKWHKCWub2nYVQCTTDbg=
