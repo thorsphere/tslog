@@ -2,9 +2,18 @@
 
 ## Reporting a Vulnerability
 
-If you think you've identified a security issue, please send an email with all relevant details
-to security at thorsphere dot com. Please do not report the issue publicly.
+If you discover a potential security vulnerability in tstrading, please report it responsibly. Do not disclose the issue publicly until it has been addressed.
+
+- Contact: Send an email with all relevant details (including steps to reproduce) to security at thorsphere dot com.
+- Response Time: You can expect an acknowledgment within a few days.
 
 ## Security Vulnerability Response
 
-If the security report moves to a fix and a new release, it will be referred to in the release notes.
+- We will investigate all reports promptly.
+- If a fix is needed, we will develop and test it privately.
+- Once resolved, we will release an update and publicly disclose the issue in the release notes, crediting the reporter (with permission).
+- We follow responsible disclosure practices and may coordinate with you on timing.
+
+## Questions
+
+For general questions about security, start a [discussion](https://github.com/thorsphere/tslog/discussions).
